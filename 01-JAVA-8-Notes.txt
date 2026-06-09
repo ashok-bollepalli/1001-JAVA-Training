@@ -1,0 +1,270 @@
+
+===================
+Java 1.8 Features
+===================
+
+1) Interface changes
+
+	1.1 ) Default Methods
+	1.2 ) Static Methods
+
+2)  Functional Interfaces (@FunctionalInterface)
+
+	2.1) Predicate & BiPredicate
+
+	2.2) Consumer & BiConsumer		
+
+	2.3) Supplier
+
+	2.4) Function & BiFunction
+
+3) Lambda Expressions
+
+4) Method Referenences & Constructor References
+
+5) Stream API		
+
+6) Optional Class
+
+7) Date and Time API
+
+8) SpliIterator, StringJoiner, forEach ( ) method..
+
+
+===================
+Interface changes
+===================
+
+-> Interface means collection of abstract methods
+
+Note: The method which doesn't contain body is called as abstract method.
+
+-> When a class is implementing interface its mandatory, that class should implement all abstract methods of that interface othewise class can't be compiled.
+
+```
+interface Vehicle {
+	public abstract void startVechicle ( );
+
+	private void m1(){
+		// logic
+	}
+}
+
+class Car implements Vehicle {
+
+	public void startVehicle ( ) {
+		// logic to start car
+	}
+}
+
+class Bus implements Vehicle {
+	public void startVehicle ( ) {
+		// logic to start  bus
+	}
+}
+
+
+class Bike implements Vehicle {
+	public void startVehicle ( ) {
+		// logic to start  bike
+	}
+}
+```
+
+
+=> If we add new method in interface then Car, Bike and Bus will fail at compile time.
+
+=> To overcome above problem we will use Default & Static methods
+
+
+** Interface can have concreate methods from 1.8v
+
+** Interface concrete method should be default or static
+
+
+```
+public interface Vehicle {
+	
+	public void start();
+
+	public default void stop(){
+		// logic
+		m1();
+	}
+
+	public static void clean(){
+		// logic
+		m1();
+	}
+
+	private void m1(){
+		// logic
+	}
+}
+```
+
+Ex:  forEach ( ) method added in java.util.Iterable interface as default method in 1.8v
+
+
+----------------------------------------------------------------------
+
+A ---- default m1()
+
+B ---- default m1()
+
+When two interfaces have the same default method, the implementation class must override that method. Otherwise Java will get confused: should it call A.m1() or B.m1()?
+
+
+class C implements A, B {
+	
+	void m1(){
+		// specific logic
+	}
+}
+
+** interface default methods we can override in impl classes
+
+** interface static methods we can't overide in impl classes
+
+** We can write multiple default & static methods in interface
+
+** Default & Static methods introduced to provide backward compatability
+
+** When two interfaces have the same default method, the implementation class must override that method.
+
+** In interface we can write private concrete methods also to use only inside that interface (It is from Java 9 onwards)
+
+** Private methods we can't call from implementation classes
+
+** private methods we can't override
+
+** Private methods in interfaces were introduced in Java 9. They are used to write reusable helper logic inside the interface and avoid duplicate code in default and static methods.
+
+
+===========================================================
+Q) How many types of methods we can write in interfaces ? 
+===========================================================
+
+1) Abstract Methods
+
+2) Default Methods
+
+3) Static Methods
+
+4) Private Methods
+
+
+
+=====================
+Lambda Expressions
+=====================
+
+-> Java is called as Object Oriented Programming language. Everything will be represented using Classes and Objects.
+
+-> In OOP language Classes & Objects are main entities. We need to write methods inside the class only.
+
+-> Lambda Expressions Introdced in java 1.8v
+
+-> From 1.8v onwards Java is also called as Functional Programming Language.
+
+-> Functional Programming means everything will be represented in the form functions.
+
+		-- Function can exist outside of the class
+
+		-- Function can be stored into referenence varaible
+
+		-- One function we can pass as a parameter to another function
+
+
+-> Lambda Expressions introduced in Java to enable Functional Programming.
+
+==============
+What is Lambda
+==============
+
+-> Lambda is an anonymous function
+
+	-- No Name
+	-- No Modifier
+	-- No Return Type		
+
+
+Ex-1 : 
+
+public void m1() {	
+	s.o.p ("Hi");
+}	
+
+( ) -> { s.o.p("hi") }
+
+Note: When we have single line in body then curly braces are optional
+
+( ) -> s.o.p("hi")
+
+Ex-2 : 
+
+public void add(int a, int b){
+	s.o.p(a+b);
+}
+
+(int a, int b) -> s.o.p(a+b);
+
+(a,b) -> s.o.p(a+b);
+
+Ex:-3
+
+public int getLength (String name) {
+	return name.length ( );
+}
+
+(String name) -> return name.length();
+
+(name) -> name.length();
+
+name -> name.length();
+
+Ex:-4
+
+public Double getEmpSalary (Employee emp) {
+
+	return emp.getSalary ( );
+
+}
+
+emp -> emp.getSalary();
+
+========================
+Functional Interfaces
+========================
+
+-> The interface which contains only one abstract method is called as Functional Interface
+
+-> Functional Interfaces are used to invoke Lambda expressions
+
+-> Below are some predefined functional interfaces
+
+		Runnable --> run ( ) method
+
+		Callable --> call ( ) method
+
+		Comparable ---> compareTo ( )
+
+
+-> To represent one interface as Functional Interface we will use @FunctionalInterface annotation.
+
+@FunctionalInterface
+public interface MyInterface {
+	public void m1( );
+}		
+
+Note: When we write @FunctionalInterface then our compiler will check interface contains only one abstract method or not.
+
+
+-> In Java 8 several predefined Functional interfaces got introduced they are
+
+	1) Predicate & BiPredicate
+	2) Consumer & BiConsumer
+	3) Supplier
+	4) Function & BiFunction
+
+-> The above interfaces are provided in java.util.function package	
