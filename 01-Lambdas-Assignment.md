@@ -709,36 +709,4 @@ Students should follow the below guidelines while submitting assignments:
 
 ---
 
-# WhatsApp Message to Share with Students
-
-```text
-📌 Advanced Java Assignment
-
-Topic: Lambda Expressions & Functional Interfaces
-
-Dear Students,
-
-Complete 10 high-complexity tasks based on real-time Java use cases:
-
-✅ Employee Salary Processing
-✅ Course Recommendation System
-✅ Order Processing Workflow
-✅ Loan Eligibility Rule Engine
-✅ Placement Filtering System
-✅ Notification Routing
-✅ Payment Gateway Strategy
-✅ File Processing Framework
-✅ Interview Feedback Analyzer
-✅ Dynamic Report Generator
-
-Concepts to use:
-Lambda Expressions, Custom Functional Interfaces, Predicate, Function, Consumer, Supplier, Comparator, Stream API, groupingBy, sorting, filtering, and method chaining.
-
-Submit your code with proper class names, package structure, comments, and output screenshots.
-
--- Team Ashok IT
-```
-
----
-
 **Prepared By: Team Ashok IT**
