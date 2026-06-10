@@ -267,4 +267,305 @@ Note: When we write @FunctionalInterface then our compiler will check interface 
 	3) Supplier
 	4) Function & BiFunction
 
--> The above interfaces are provided in java.util.function package	
+-> The above interfaces are provided in "java.util.function" package	
+
+
+==========
+Predicate
+==========
+
+-> It is predefined Functional interface
+
+-> It is used check condition and returns true or false value
+
+-> Predicate interface having only one abstract method that is test (T t)
+
+
+	interface Predicate{
+		boolean test(T t);
+	}
+
+
+Task: Declare names in an array and print names which are starting with 'A' using lambda expression.
+
+	String[ ]  names = {"Anushka", "Anupama", "Deepika", "Kajol", "Sunny" };
+
+====================
+Predicate Joining
+====================
+
+-> To combine multiple predicates we will use Predicate Joining
+
+and ( ) method
+
+or ( ) method
+
+## Task-1 : Print emp names who are working in Hyd location in DevOps team.
+
+class Employee {
+
+	String name;
+	String location;
+	String dept;
+
+	Employee(String name, String location, String dept) {
+		this.name = name;
+		this.location = location;
+		this.dept = dept;
+	}
+}
+
+--------------------------------------------------------
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
+
+
+public class Main {
+    public static void main(String[] args) {
+
+        Predicate<Integer> p = i -> i > 10;
+        System.out.println(p.test(5));
+        System.out.println(p.test(15));
+
+        System.out.println("===========================");
+
+        String[] names = {"Anushka", "Anupama", "Deepika", "Kajol", "Sunny"};
+
+        Predicate<String> p1 = name -> name.charAt(0) == 'A';
+
+        for (String name : names) {
+            if (p1.test(name)) {
+                System.out.println(name);
+            }
+        }
+
+        System.out.println("===========================");
+
+
+        Employee e1 = new Employee("Anil", "Chennai", "DevOps");
+        Employee e2 = new Employee("Rani", "Pune", "Networking");
+        Employee e3 = new Employee("Ashok", "Hyd", "DevOps");
+        Employee e4 = new Employee("Ganesh", "Hyd", "DevOps");
+
+        List<Employee> empsList = Arrays.asList(e1, e2, e3, e4);
+
+        Predicate<Employee> localtionPredicate = e -> e.location.equals("Hyd");
+        Predicate<Employee> deptPredicate = e -> e.dept.equals("DevOps");
+
+        // Predicate Joining
+        Predicate<Employee> empPredicate = localtionPredicate.and(deptPredicate);
+
+        for (Employee emp : empsList) {
+            if (empPredicate.test(emp)) {
+                System.out.println(emp.name);
+            }
+        }
+
+
+    }
+}
+
+class Employee {
+
+    String name;
+    String location;
+    String dept;
+
+    Employee(String name, String location, String dept) {
+        this.name = name;
+        this.location = location;
+        this.dept = dept;
+    }
+}
+-----------------------------------------------------------------------------------------
+
+
+===============================
+Supplier Functional Interface
+===============================
+
+-> Supplier is a predefined functional interface introduced in java 1.8v
+
+-> It contains only one abstract method that is get ( ) method
+
+-> Supplier interface will not take any input, it will only returns the value.
+
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class SupplierDemo {
+
+    public static void main(String[] args) {
+
+        Supplier<String> s = () -> {
+            String otp = "";
+            for (int i = 1; i <= 6; i++) {
+                otp = otp + (int) (Math.random() * 10);
+            }
+            return otp;
+        };
+
+        System.out.println(s.get());
+        System.out.println(s.get());
+        System.out.println(s.get());
+        System.out.println(s.get());
+
+        System.out.println("=======================");
+
+        int otpLength = 8;
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+
+        Supplier<String> otpSupplier = () -> {
+        StringBuilder otp = new StringBuilder();
+        for (int i = 0; i < otpLength; i++) {
+            int index = random.nextInt(characters.length());
+            otp.append(characters.charAt(index));
+        }
+            return otp.toString();
+        };
+
+        System.out.println("Generated OTP: " + otpSupplier.get());
+        System.out.println("Generated OTP: " + otpSupplier.get());
+        System.out.println("Generated OTP: " + otpSupplier.get());
+        System.out.println("Generated OTP: " + otpSupplier.get());
+
+    }
+}
+
+
+================================
+Consumer Functional Interface
+================================
+
+-> Consumer is predefined functional interface
+
+-> It contains one abstract method i.e accept (T t)
+
+-> Consumer will accept input but it won't return anything
+
+Note: in java 8 forEach ( ) method got introduced. forEach(Consumer consumer) method will take Consumer as parameter.
+
+```
+import java.util.Arrays;
+import java.util.function.Consumer;
+
+public class ConsumerDemo {
+
+    public static void main(String[] args) {
+
+        Consumer<String> c1 = (name) -> System.out.println("Hello, " + name);
+        c1.accept("Ram");
+        c1.accept("Raj");
+        System.out.println("=============");
+
+        String[] names = {"Ram", "Anil", "Sunil", "Sita", "Gita"};
+        Arrays.stream(names).forEach(name -> System.out.println(name.toUpperCase()));
+
+        // fetch customers data from db and email regarding offers
+        // fetch customers and generate acct stmt in pdf format and send in email as attachment
+
+       Consumer<String> stmtConsumer =  (email) -> {
+            // get customer info based on email
+            // get tx history based on customer id
+            // prepare pdf with tx details
+            // send pdf to email as an attachment
+        };
+        stmtConsumer.accept("ashok@gmail.com");
+    }
+}
+```
+
+
+===============================
+Function Functional Interface
+===============================
+
+-> Function is predefined functional interface
+
+-> Funcation interface having one abstract method i.e apply(T r)
+
+		interface Function<R,T>{
+			R apply (T t);
+		}	
+
+-> It takes input and it returns output
+
+```
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+public class FunctionDemo {
+
+    public static void main(String[] args) {
+
+        Function<String, Integer> f1 = (name) -> name.length();
+        System.out.println(f1.apply("Ashok"));
+
+        BiFunction<Integer, Integer, Integer> f2 = (a, b) -> a + b;
+        System.out.println("Result : "+ f2.apply(10, 12));
+
+    }
+}
+```
+
+
+
+===========
+Stream API
+===========
+
+-> Stream API introduced in java 1.8v
+
+-> Stream API is used to process the data
+
+Note: Collections are used to store the data
+
+-> Stream API is one of the major features added in java 1.8v
+
+-> Stream in java can be defined as sequence of elements that comes from a source.
+
+-> Source of data for the Stream can be array or collection
+
+
+====================================
+Few Important Points About Streams
+====================================
+
+1) Stream is not a data structure. Stream means bunch of operations applied on source data. Source can be collection or array.
+
+2) Stream will not change original data structure of the source (It will just process the data given by the source.)
+
+
+===============
+Stream Creation
+===============
+
+-> In Java we can create Stream in 2 ways
+
+			1) Stream.of(e1, e2, e3, e4)
+
+			2) stream ( ) method
+
+
+===================
+Stream Operations
+===================			
+
+-> Stream API provided several methods to perform Operations on the data.
+
+-> We can divide Stream api methods into 2 types
+
+		1) Intermediate Operational Methods
+
+		2) Terminal Operational Methods
+
+-> Intermediate Operational methods will perform operations on the stream and returns a new Stream
+
+		ex: filter (), map (), sorted(), distinct(), limit(), skip() etc...		
+
+-> Terminal Operational methods will take input and will provide result as output.
+
+		Ex:  count(), collect (), forEach(), reduce(), min(), max(), anyMatch().. 
