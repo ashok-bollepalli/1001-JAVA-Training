@@ -1,0 +1,221 @@
+
+============================
+1. What is Multithreading?
+============================
+
+** Multithreading means executing multiple tasks at the same time using multiple threads.
+
+** It is mainley used for parallel processing in the application.
+
+Note: Multiple users are able to access web application at a time. 
+
+** Every web servers contains thread pool to handle multiple requests paralelly.
+
+
+### Real-time examples ###
+
+1) Sending email to multiple users (bulk email)
+
+2) Processing payment and sending invoice
+
+3) Generate and send Bank account statement to all acc holders every month
+
+4) Generate and send Credit Card bill statements to holders
+
+5) Running Batch jobs
+
+6) Send Reminder notices regarding insurance plan renewals
+
+====================================================
+Monthly Bank Account Statement Generation Scenario
+=====================================================
+
+public class HdfcBank {	
+
+	public void generateStatements() {
+
+		List<BankAccount> list = service.getAllAccounts ( ); // 1 cr
+
+		for(BankAccount acc : list){
+			List<AccTx> txList = service.getTxHistory(startDate, endDate, acc.getAccNumber());
+		}
+	}
+
+	public void prepareStmtPdf(List<AccTx> txList, BankAccount acc){
+		// generate pdf
+		// store pdf in aws s3 bucket
+		// update pdf url in db
+		// send pdf to customer email as an attachment
+	}
+}
+
+
+=> In the above program, we are generating account statements in sequential manner 
+  (one after other).
+
+======================================
+Running our program with 1 thread
+======================================
+
+Ex : for 1 customer statement generation it is taking 1 sec of time.  
+
+1 second ===> 1 statement
+
+1 minute ===> 60 statements we can generate
+
+1 hour ===> 60 * 60 ===> 3,600 statements we can generate
+
+24 Hours ===> 24 * 3,600 ===> 86, 400 stmts we can generate  
+
+1 Month ===> 30 * 86,400 ===> 25,92,000 Stmts we can generate
+
+
+===================================
+Run our program with 10 threads
+===================================
+
+=> If we run our program with 10 threads then in 1 sec 10 statements will be processed.
+
+1 sec ===> 10 statements
+
+1 min ===> 60 * 10 ==> 600 stmts
+
+1 hour ==> 60 * 600 => 36,000 statements
+
+1 hours ==> 2 * 36,000 ==> 72,000 statements
+
+24 hours ==> 24 * 36,000 => 8,63,000 stmts
+
+
+===================================
+Run our program with 50 threads
+===================================
+
+=> If we run our program with 50 threads then in 1 sec 50 statements will be processed.
+
+1 sec => 50 statements
+
+1 min => 60 * 50 => 3,000 statements
+
+1 hour => 60 * 3000 => 1,80,000 statements
+
+1 day => 24 * 1,80,000 => 43,20,000 statements
+
+
+====================================
+Traditional Way of creating Thread
+====================================
+
+public class Main {
+    public static void main(String[] args) {
+
+        MyTask t1 = new MyTask();
+        MyTask t2 = new MyTask();
+
+        t1.start();
+        t2.start();
+
+    }
+}
+
+class MyTask extends Thread {
+    public void run() {
+        System.out.println("Task running by: " + Thread.currentThread().getName());
+    }
+}
+
+Note: In above program we are creating the threads manullay. It is not recommended when we want to start multiple threads at a time in the real-time application.
+
+
+==============================
+What is Executor Framework?
+==============================
+
+==> Executor Framework is a high-level API in Java used to manage threads efficiently.
+
+==> Instead of creating threads manually, we submit tasks to an executor. The executor manages thread creation, reuse, scheduling, and shutdown.
+
+
+		ExecutorService exService = Executors.newFixedThreadPool(10);
+
+			exService.submit(task);
+
+			exService.shutdown();
+
+Note : Here, we are giving the task to the thread pool.			
+
+==============================
+What is Thread Pool?
+==============================
+
+=> A thread pool is a group of already-created threads.
+
+=> Instead of creating a new thread for every task, Java reuses existing threads from the pool.
+
+
+Example : 
+
+If we have 100 tasks and thread pool size is 5:
+
+Only 5 threads will execute tasks.
+Remaining tasks will wait in queue.
+Once a thread completes one task, it picks the next task.
+
+
+=====================
+Executors Example
+=====================
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class StudentsCertificates {
+
+    public static void main(String[] args) {
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        executor.submit(new CertificateTask("Raj"));
+        executor.submit(new CertificateTask("Anil"));
+        executor.submit(new CertificateTask("Sunil"));
+        executor.submit(new CertificateTask("Sita"));
+        executor.submit(new CertificateTask("Gita"));
+        executor.submit(new CertificateTask("John"));
+
+        executor.shutdown();
+
+
+    }
+}
+
+class CertificateTask implements Runnable{
+
+    private String studentName;
+
+    public CertificateTask(String studentName) {
+        this.studentName = studentName;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Generating certificate for " + studentName + " by " + Thread.currentThread().getName());
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            System.out.println("Certificate generation interrupted");
+        }
+        System.out.println("Certificate generated for " + studentName);
+    }
+}
+
+====================================================================================================
+
+Requirement :: When a student enrolls into a course, perform these tasks using Multi Threading with Executors:
+
+1) Save enrollment
+2) Send welcome email
+3) Generate invoice
+4) Send WhatsApp message
+5) Update CRM
+
+======================================================================================================

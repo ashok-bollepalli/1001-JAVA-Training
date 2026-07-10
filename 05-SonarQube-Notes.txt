@@ -1,0 +1,103 @@
+
+
+============
+SonarQube
+============
+
+=> SonarQube is used for code quality check.
+
+=> Using sonarqube we can perform code review (static analysis).
+
+=> Using SonarQube we can identify developer mistakes in the code.
+
+=> SonarQube software developed by using Java language.
+
+=> Using SonarQube s/w we can perform code review for 30+ programming languages.
+
+=> SonarQube is available in 2 flavours
+
+		1) Enterprise Edition (licensed)
+
+		2) Community Edition (free)
+
+
+=============
+Sonar Issues
+=============
+
+1) Bugs (Ex: NullPointerException)		
+
+2) Vulnerabiilties (Ex: using sensitive data directley like pin, pwd, atm num, SSN..)
+
+3) Code Smells (Ex: un-used imports, un-used method param )
+
+4) Duplicate Code blocks
+
+5) Code Coverage (Ex: Junit executions status)
+
+
+====================
+Sonar Server Setup 
+====================
+
+=> We can setup Sonar Server in 3 ways...
+
+Approach-1 : Take one Linux vm in aws cloud and install sonar server on your own 
+
+Approach-2 : Setup Sonar Server as a docker container in windows or linux machine
+
+Approach-3 : Sonar Cloud
+
+@@@ Sonar setup : https://github.com/ashokitschool/DevOps-Documents/blob/main/06-Sonar-Setup-Docker.md
+
+Default Username : admin
+Default pwd : admin		
+
+
+============================================
+Integrate Sonar server with Java Maven App
+============================================
+
+-> Configure Sonar Properties under <properties/> tag in "pom.xml"
+
+<properties>
+	<sonar.host.url>http://localhost:9000/</sonar.host.url>
+	<sonar.login>admin</sonar.login>
+	<sonar.password>admin@123</sonar.password>
+</properties>
+
+-> Execute maven goal to perform code review
+
+		$ mvn sonar:sonar  
+
+-> After build success, go to sonar dashboard and verify the results.
+
+
+==========================
+Working with Sonar Token
+==========================
+
+-> Go to Sonar Server Dashboard -> Click on profile -> My Account -> Security -> Generate Token 
+
+<properties>	
+	<sonar.host.url>http://localhost:9000/</sonar.host.url>
+	<sonar.login>squ_6429b1e9ad9c2eeebcb587db534f422be4253ca2</sonar.login>
+</properties>
+
+=======================================
+What is Quality Profile in Sonar ?
+=======================================
+
+=> In SonarQube, a Quality Profile is a set of rules that define the coding standards and best practices for code quality check.
+
+=> Every Programming language is having one default quality profile.
+
+
+==================================
+What is Quality Gate in Sonar ?
+==================================
+
+In SonarQube, a Quality Gate is a set of conditions that determines whether your code is allowed to pass or fail the code quality check after analysis.
+
+
+Note: If quality gate is FAILED that means "NO GO" (no deployment).

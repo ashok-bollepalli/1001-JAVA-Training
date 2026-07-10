@@ -1,0 +1,246 @@
+
+============================
+What is Spring Framework ?
+============================		
+
+** Spring is free & open source java based framework.
+
+** Spring is called as Application Development Framework.
+
+** By using spring framework we can develop entire application.
+
+** Spring framework provides commong logics required for application development.
+
+** The author of spring framework is "Rod Johnson".
+
+** The first version of spring released in the year of 2003-2004.
+
+** The current version of spring is 7.x
+
+** Now spring framework is under license of "VMWare" company.
+
+
+########### Note: SpringBoot is an extension for Spring Framework. ###########
+
+** SpringBoot came into picture to automate common configurations in projects development.
+
+** Spring Boot 1.x released in the year of 2015
+
+** The current version of springboot is 4.x
+
+
+=============
+Spring Boot 
+=============
+
+=> Spring Boot is an extension for spring framework.
+
+=> Spring Boot is an approach to develop spring based applications with less configurations.
+
+=> Using springboot we can develop several types of applications.
+
+		1) Console based application (stand-alone)
+		2) web applications
+		3) distributed applications
+		4) Microservices
+
+
+=> If we develop project using spring then we need to manage configurations on our own.
+
+=> If we develop project using springboot then we will get Auto Configuration support.
+
+
+=> Using springboot we can achieve rapid application development (quickly we can develop and we can run).
+
+
+===========================
+Advantages with springboot
+===========================		
+
+1) POM Starters
+
+2) Auto Configuration
+
+3) Embedded Containers
+
+4) Actuators
+
+
+## pom starters (dependencies) :: Simplifying dependencies configuration in pom.xml
+
+			** webmvc-starter
+			** data-jpa-starter
+			** security-starter
+			** mail-starter
+			** actuator-starter
+
+
+Note: pom starters are used to enable auto-configurations in boot application.			
+
+
+## Auto Configuration :: Based on pom starters springboot will identify configurations required for the project and boot will manage those configurations in the runtime.
+
+
+		** spring-boot-starter ----------> It will start IOC container
+
+		** data-jpa-starter -------------> It will create database connection pool
+
+		** webmvc-starter ---------------> It will start tomcat server
+
+		** security-starter -------------> Default Login page will come for authentication
+
+
+## Embedded Servers/Containers :: Springboot will take care of servers to run our web applications (we no need to download & install)			
+
+=> Springboot will support 3 embedded containers		
+
+			1) tomcat (default)
+
+			2) jetty
+
+			3) netty
+
+			4) undertow
+
+## Actuators :: Production Ready Features
+
+
+=> Actuators are used to monitor and manage our applications.	
+
+		** Check App Health
+		** Check beans loaded
+		** Check URL patterns
+		** Env Props
+		** Check Metrics
+		** Thread Dump
+		** Heap Dump	
+
+
+
+
+==================================================
+Q) How to represent java class as Spring Bean ?
+==================================================
+
+=> We have several annotations to represent our java class as Spring bean.
+
+		1) @Component 	-----> Utility classes
+
+		2) @Service 	-----> Business layer classes
+
+		3) @Repository  -----> DAO Classes
+
+		4) @Configuration  ---> Represents java class as config class (custom configs)
+
+		5) @Bean		-----> Method Level Annotation (Custom Beans)
+
+		6) @Controller  -----> Spring Controller to handle req and res
+
+		7) @RestController ---> Distributed component (B 2 B)
+
+
+==============================================================
+Q) What is component scanning and how it works internally ?
+==============================================================			
+
+=> It is the process of identifying spring beans available in the project.
+
+=> Component Scanning will start from base pacakge name
+
+Note: The package which contains springboot start class is called as base package.
+
+		Ex : com.balenits
+
+=> Once base package scanning completed, then it will go for sub packages of base package.
+
+Note: package name which is starting with base package name is considered as sub package.
+
+		com.balenits --------------> base package
+
+		com.balenits.dao ---------> will be scanned
+
+		com.balenits.service ---------> will be scanned
+
+		com.balenits.config ---------> will be scanned
+
+		in.balenits ---------> will not be scanned 
+
+Note: We can configure multiple base packages like below
+
+```
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.balenits", "in.balenits"})
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+}
+```
+
+
+====================================
+What is Dependency Injection ?
+====================================
+
+=> The process of injecting one class obj into another class obj is called as dependency injection (DI).
+
+
+		Ex: 
+		controller class method should call service class method
+		(inject service obj into controller
+
+		Service class method should call dao class method
+		(inject dao obj into service)	
+
+
+
+=> Dependency Injection we can perform in 3 ways
+
+		1) Constructor injection
+
+		2) Setter injection
+
+		3) Field injection
+
+
+=================================
+What is runner in springboot ?
+=================================
+
+-> Runners are used to execute any logic only once when the boot application got started.
+
+-> Runners will be called by SpringApplication.run () method.
+
+## Real-Time usecases :
+
+1) To delete temp tables data when application got started..
+
+2) Load static tables data into cache memory when app got started..
+
+3) Send an email to management team when application got started..
+
+
+=> We have 2 types of runners in springboot
+
+		1) ApplicationRunner
+
+		2) CommandLineRunner		
+
+
+Note: Both are functional interfaces, having only abstract method i.e run (..)		
+
+
+============
+Requirement	
+============
+
+1) Develop a Spring Boot REST API to perform CRUD Operations using H2 Database (in-memory DB)
+	
+	-- implement logging
+	-- implement Exception handling
+
+Note: Create swagger documentation and postman collection	
+
+Deploy the application using Docker.

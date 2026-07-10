@@ -1,0 +1,145 @@
+
+==================
+Mini Project
+==================
+
+Requirement : User management with below functionalities
+
+1) User Registration (with dependent drop downs)
+
+2) Email Sending upon successfull registration with temp pwd
+
+3) Login
+
+4) Reset Password
+
+5) Dashboard (Random Quote display)
+
+##### Third Party API To get Random Quote : https://dummyjson.com/quotes/random
+
+
+================
+Database tables
+================
+
+1) COUNTRY_MASTER
+
+		-- country_id 		INT			PK		AUTO_INCREMENT
+		-- country_name		VARCHAR
+
+2) STATE_MASTER		
+
+		-- STATE_ID			INT 		PK 		AUTO_INCREMENT
+		-- STATE_NAME 		VARCHAR		
+		-- COUNTRY_ID 		INT 		FK		(COUNTRY_MASTER)
+
+3) CITY_MASTER
+
+		-- CITY_ID 			INT 		PK 		AUTO_INCREMENT
+		-- CITY_NAME 		VARCHAR
+		-- STATE_ID			INT 		FK 		(STATE_MASTER)		
+
+4) USERS_TBL
+
+		-- USER_ID 			INT 		PK 		AUTO_INCREMENT
+		-- UNAME 			VARCHAR
+		-- EMAIL			VARCHAR
+		-- PWD 				VARCHAR		
+		-- PWD_UPDATED		VARCHAR
+		-- COUNTRY_ID		INT 		FK		COUNTRY_MASTER
+		-- STATE_ID			INT 		FK 		STATE_MASTER
+		-- CITY_ID			INT 		FK 		CITY_MASTER
+		-- CREATE_DATE		DATE
+		-- UPDATED_DATE 	DATE
+
+
+==================
+JAVA COMPONENTS	
+==================		
+
+1) CountryEntity.java
+2) CountryRepository.java
+
+3) StateEntity.java
+4) StateRepository.java
+
+5) CityEntity.java
+6) CityRepository.java
+
+7) UserEntity.java
+8) UserRepo.java
+
+9) CountryDto.java
+10) StateDto.java
+11) CityDto.java
+12) UserDto.java
+13) ResetPwdDto.java
+
+14) QuoteApiResponse.java
+15) ApiResponse.java
+
+16) UserService.java (I)
+17) UserServiceImpl.java
+
+18) UserRestController.java
+
+======================
+Development Process
+======================
+
+1) Create spring-boot app with below dependencies
+
+		a) web-starter
+		b) data-jpa
+		c) mysql-driver
+		d) mail-starter
+		e) devtools
+		f) project lombok
+		g) model mapper
+		h) springdoc-openapi-starter-webmvc-ui
+
+2) Create Entities and Repositories with proper association mapping
+
+3) Create DTO classes 
+
+4) We need to create Mapper classes
+
+5) Create Service Interface & impl class with required methods
+
+6) Create RestController with http methods to handle request & respons
+
+7) Configure data source & SMTP props in application.yml file
+
+8) Run the application and test it 
+
+Note: We need to create Postman collection to test our backend api.
+
+
+=================== DB Script to load Static Data into DB Tables ===================
+
+create database belentis;
+
+use belenits;
+
+insert into country_master values(1, 'India');
+insert into country_master values(2, 'USA');
+
+insert into states_master(state_id, state_name, country_id) values(1, 'AP', 1);
+insert into states_master(state_id, state_name, country_id) values(2, 'TG', 1);
+
+insert into states_master(state_id, state_name, country_id) values(3, 'RI', 2);
+insert into states_master(state_id, state_name, country_id) values(4, 'NJ', 2);
+
+insert into cities_master(city_id, city_name,state_id) values (1, 'Guntur', 1);
+insert into cities_master(city_id, city_name,state_id) values (2, 'Ongole', 1);
+
+insert into cities_master(city_id, city_name,state_id) values (3, 'Hyderabad', 2);
+insert into cities_master(city_id, city_name,state_id) values (4, 'Warangal', 2);
+
+insert into cities_master(city_id, city_name,state_id) values (5, 'Providence', 3);
+insert into cities_master(city_id, city_name,state_id) values (6, 'New Port', 3);
+
+insert into cities_master(city_id, city_name,state_id) values (7, 'Trenton', 4);
+insert into cities_master(city_id, city_name,state_id) values (8, 'Newark', 4);
+
+===============================================================================================

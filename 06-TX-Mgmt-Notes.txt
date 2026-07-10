@@ -1,0 +1,130 @@
+
+========================================
+Spring Data JPA Transaction Management
+========================================
+
+=> A transaction is a group of database operations executed as one single unit.
+
+	Either : All operations should be successful
+
+	Or : All operations should be rolled back
+
+
+## Real-Time Example
+
+Imagine a banking application:
+
+Transfer ₹5000 from Account A to Account B
+
+This operation has two database steps:
+
+Step-1: Deduct ₹5000 from Account A
+
+Step-2: Add ₹5000 to Account B
+
+Note : If step 1 is successful but step 2 fails, the money is lost.
+
+So both operations should happen inside one transaction.
+
+=================
+ACID Properties
+=================
+
+Every transaction should follow ACID properties.
+
+Atomicity :  All or Nothing	(Ex : Debit and Credit both should happen)
+
+Consistency : DB should remain valid (Ex: Balance should not be invalid)
+
+Isolation : One Tx shouldn't distrub another (Ex: Two users updating same account)
+
+Durability : Once committed, data should be permanent (Ex: after transfer success, data should remain)
+
+==========================================
+Why Transaction Management is Required?
+===========================================
+
+Without transaction management:
+
+	-- Partial data can be saved
+
+	-- Database inconsistency may happen
+
+	-- Business Rules May fail
+
+	-- Rollback will not happen automatically
+
+
+With transaction management:
+
+	-- Multiple DB operations can happen as single unit
+
+	-- Rollbacks happens on failure
+
+	-- Data consistency will be maintained	
+
+
+====================================
+How to implement Tx management ?	
+====================================
+
+==> Using @Transactional annotation we can implement TX management.
+
+
+Ex : 
+
+@Transactional
+public void transferMoney() {
+    // debit account
+    // credit account
+}
+
+** Start tx before method execution
+
+** Commit TX is method completes successfully
+
+** Rollback transaction if method fails
+
+
+Note: It is always recommended to use this annotation at service layer methods.
+
+
+################# Execution Flow ################
+
+Client
+  |
+  v
+Service method called
+  |
+  v
+Spring starts transaction
+  |
+  v
+Repository methods execute
+  |
+  v
+If success -> commit
+If exception -> rollback
+
+==============================
+Transaction Propagation
+==============================
+
+** Propagation means: How one transactional method behaves when it is called from another transactional method
+
+** Below are the TX propogation types we have...
+
+
+REQUIRED : Use existing transaction. If not available, create new one
+
+REQUIRES_NEW : Always create a new transaction
+
+SUPPORTS : Use transaction if available, otherwise run without transaction
+
+MANDATORY : Transaction must already exist
+
+NEVER : Transaction must already exist
+
+NOT_SUPPORTED : Should not run inside transaction
+
+NESTED : Runs inside nested transaction using savepoint

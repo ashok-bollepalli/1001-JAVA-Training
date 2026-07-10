@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: 204-User-MGMT-API

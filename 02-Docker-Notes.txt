@@ -1,0 +1,517 @@
+
+=====================================
+Software Application Architecture
+=====================================
+
+1) Frontend : User Interface (UI)
+
+2) Backend : Business logic (Microservices)
+
+3) Database : Storage
+
+=============================
+Tech Stack of Application
+=============================
+
+Frontend : Angular 18v
+
+Backend : Java 21v
+
+Database : MySQL 8.5
+
+Note: If we want to run our application code, then we need to setup all required dependencies/softwares in the machine.
+
+Note: dependencies nothing but the softwares which are required to run our application.
+
+
+=====================
+Life without Docker
+=====================
+
+### (1) "It works on my machine" problems"
+
+- Developers would build and test apps on their laptops.
+
+- When they move the app to servers, it often breaks because of differences in OS, libraries, versions, configurations, etc.
+
+
+### (2) Complex Software Installations
+
+	-- download right version of software
+	-- install dependencies
+	-- configure services properly
+
+
+***************** To resolve above probelms we can use Docker ******************
+
+==================
+What is Docker ?
+==================	
+
+=> Docker is a free & open source software
+
+=> Docker is used for containerization
+
+		Container = Exceute application as a package (code + required softwares)
+
+=> With the help of docker, we can run our application in any machine very easily.
+
+=> Docker will take care of dependencies installation required for app execution.		
+
+=> We can make our application portable using Docker.
+
+
+=====================
+Docker Architecture
+=====================
+
+1) Dockerfile
+
+2) Docker Image
+
+3) Docker Registry
+
+4) Docker Container
+
+
+** Dockerfile is used to specify where is our app-code and what dependencies (softwares) are required for our application execution.
+
+** Docker Image is a package which contains (app_code + required softwares)
+
+Note: Dockerfile is required to build docker image.
+
+** Docker Registry is used to store Docker Images.
+
+Note: When we run docker image then Docker container will be created. Docker container is a linux virtual machine.
+
+** Docker Container is used to run our application.
+
+Note: Using one docker image we can create multiple containers.
+
+=========================
+Docker setup in windows
+=========================
+
+Step-1 : Download software using below url
+
+	https://www.docker.com/products/docker-desktop/
+
+Step-2 : install it and restart your machine
+
+Step-3 : Verify installation using cmd
+
+		$ docker --version
+
+		$ docker info
+
+Step-4 : Create docker hub account to store images			
+
+
+=================
+Docker Commands
+=================
+
+## docker images : To display docker images available in our system.
+
+## docker pull : To download docker image from docker hub
+
+	$ docker pull <image-name/image-id>
+
+## docker run : To create docker container based on docker image	
+
+	$ docker run <image-name/image-id>
+
+## docker ps : Display all runnig containers information
+
+## docker ps -a : Display "running + stopped containers" information
+
+## docker ps -q : To display running containers ids.
+
+## docker stop : Stop the running container
+
+		$ docker stop <container-id>	
+
+## docker start : To start the container which is in stopped state.
+
+	$ docker start <container-id>	
+
+## docker rm : To delete stopped container
+
+	$ docker rm <container-id>	
+
+## docker rmi : To delete docker image
+
+	$ docker rmi <image-name/image-id>	
+
+## docker logs : To display container logs
+
+	$ docker logs <container-id>
+
+## docker system prune : delete stopped containers + un-used images
+
+	$ docker system prune -a
+
+
+=======================================================
+Running Real-world applications using docker images
+=======================================================	
+
+### public docker image name (java springboot app) : ashokit/spring-boot-rest-api
+
+
+$ docker pull ashokit/spring-boot-rest-api
+
+$ docker run ashokit/spring-boot-rest-api	
+
+Note: If we run image like above we can't access our application directley. Because application is running inside container and we will try to access application url using our host machine browser.
+
+#### Host Machine and Container machine (where application runs) don't have any relation as of now.
+
+
+========================
+What is Port Mapping ?
+========================
+
+Note: By default, services running inside Docker containers are isolated and not accessible from outside.
+
+=> Docker port mapping is the process of linking container port to host machine port.
+
+=> It is used to allow external access to applications running inside the container.
+
+
+Syntax : docker run -p <host_port>:<container_port> <image_name>
+
+Note: host port and container port no need to be same.
+
+$ docker run -p 9090:9090 ashokit/spring-boot-rest-api
+
+
+========================
+What is detached mode ?
+========================
+
+=> Detached mode in Docker means running a container in the background rather than attaching to its input/output in the terminal.
+
+=> When you run a container in detached mode, Docker starts it and then immediately gives you back control of the terminal. The container continues running in the background.
+
+	$ docker run -d -p host-port:container-port <image-name>
+
+===========================
+how to write Dockerfile
+===========================
+
+
+** To write Dockerfile we will use below set of keywords
+
+1) FROM
+
+2) MAINTAINER
+
+3) RUN
+
+4) CMD
+
+5) ENTRYPOINT
+
+6) COPY
+
+7) ADD
+
+8) WORKDIR
+
+9) EXPOSE
+
+
+==============
+FROM keyword
+==============
+
+=> It is used to specify required softwares (base images) for our application execution
+
+
+		FROM openjdk:17
+
+		FROM mysql:8.5
+
+		FROM python:3.3
+
+		FROM node:19.0
+
+		FROM tomcat:11.0
+
+
+=> We can specifiy FROM keyword multiple times in Dockerfile (based on requirement)
+
+============
+MAINTAINER	
+============
+
+=> It is used to specify who created / modified this dockerfile
+
+		MAINTAINER Ashok Bollepalli<69686868>
+
+Note : It is optional keyword in Dockerfile
+
+
+================
+RUN Keyword		
+================
+
+=> It is used to execute some instructions when docker image is getting created.	
+
+		RUN git clone <repo-url>
+
+		RUN mvn clean package
+
+Note: If we configure multiple RUN keywords docker will execute them one by one.		
+
+==============
+CMD Keyword
+=============
+
+=> It is used to execute some instructions when docker container is getting created.
+
+Ex : we can use this to run our application
+
+		CMD java -jar app.jar
+
+		CMD ng serve
+
+Note: If we write multiple CMD instructions docker will execute only last CMD instruction. (No use of writing multiple)
+
+		$ docker run -p 8080:8080 sbapp --CMD java -jar myapp.jar
+
+=====================
+ENTRYPOINT Keyword
+=====================
+
+=> It is used to execute some instructions when docker container is getting created.
+
+Ex: 
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["python", "main.py"]
+
+
+Note: CMD keyword instruction we can override using command line args where as ENTRYPOINT instructions we can't override using command line args.
+
+===============
+COPY Keyword
+==============
+
+=> IT is used to copy the files from HOST Mahcine to Container Machine.
+
+	COPY target/app.jar   /usr/app/app.jar
+
+	COPY .	/usr/app/
+
+	COPY . /usr/my-apps/
+
+=============
+ADD Keyword
+=============
+
+=> IT is used to copy the files from HOST Mahcine to Container Machine.
+
+	ADD target/app.jar  /usr/app/
+
+	ADD <url>  /usr/app/
+
+	ADD <aws-s3-obj-url>  /usr/app/
+
+=================
+WORKDIR Keyword
+=================
+
+=> It is used to change working directory in container machine
+
+	WORKDIR /usr/app/
+
+Ex : 
+
+	COPY target/app.jar  /usr/app/
+
+	WORKDIR /usr/app/
+
+	ENTRYPOINT ["java", "-jar", "app.jar"]
+
+================
+EXPOSE Keyword	
+=================
+
+=> It is used to specify on which port number our application will run
+
+		EXPOSE 8080
+
+Note: By using EXPOSE we can't change container port number. 		
+
+Note: It is mandatory to specifiy EXPOSE in Dockerfile.
+
+
+
+===============================================
+
+Note: Dockerfile will not have any extension
+
+
+default filename : Dockerfile
+
+
+# create docker image
+
+$ docker build -t <image-name>:<tag-name> .
+
+Ex: docker build -t sbi-bank-loan-app:v1 .
+
+=============================================
+Create image and pushing image
+=============================================
+
+Step-1 : Clone git repo
+
+	$ git clone https://github.com/ashokitschool/spring-boot-docker-app.git
+
+Step-2 : Go inside project dir and perform maven build
+
+	$ cd spring-boot-docker-app
+
+	$ mvn clean package
+
+Step-3 : create docker image
+
+	$ docker build -t <username>/<image-name>:<tag-name> .		
+
+Step-4 : check images
+
+	$ docker images
+
+Step-5 : login into docker hub account
+
+	$ docker login
+
+Step-6 : Push docker image 
+
+	$ docker push <username>/<image-name>:<tag-name>
+
+=============================================================	
+
+
+===============
+Docker Compose
+===============
+
+=> Earlier ppl developed projects using Monolithic Architecture (everthing in single app)
+
+=> Now a days projects are developing based on Microservices architecture.
+
+=> Microservices means multiple backend apis will be avialable
+
+		Ex: 
+
+			1) Products API
+
+			2) Order API
+
+			3) Admin API
+
+			4) Reports API
+
+			5) Notifications API
+
+
+** Every API is a seperate project, we need to create seperate Dockerfile + Docker Image + Docker Container
+
+
+Note: When we have multiple containers then management will become very difficult 
+		(create containers / stop containers / start containers)
+
+
+		$ docker run -d -p 8080:8080 products-api
+
+		$ docker run -d -p 8080:8080 orders-api
+
+		$ docker run -d -p 8080:8080 admin-api
+
+		$ docker run -d -p 8080:8080 reports-api
+
+		$ docker run -d -p 8080:8080 notifications-api
+
+
+=> To overcome these problems we will use Docker Compose concept.
+
+=> Docker Compose is used to manage Multi - Container Based applications.
+
+=> In docker compose, using single command we can create / stop / start multiple containers at a time.
+
+
+===================================
+What is docker-compose.yml file ?
+===================================
+
+=> "docker-compose.yml" file is used to specify containers information.
+
+=> The default file name is "docker-compose.yml" (we can change it).
+
+
+=> "docker-compose.yml" file contains below 4 sections
+
+
+version : It represents compose yml version
+
+services : It represents containers information (image-name, port-mapping etc..)
+
+network : Represents docker network to run our containers
+
+volumes : Represents containers storage location
+
+=========================
+Docker Compose Example
+=========================
+
+version: "3"
+
+services:
+  web:
+    image: nginx
+    container_name: my-nginx
+    ports:
+      - "8080:80"
+
+  db:
+    image: mysql
+    container_name: my-mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "ashokitdb"
+    ports:
+      - "4406:3306"
+
+
+-------------------------------------------
+
+
+$ docker-compose up -d
+
+$ docker-compose down
+
+$ docker ps
+
+$ docker exec -it <container-name> bash
+
+----------------------------------------------------------------------------------
+
+Develop SpringBoot application to perform CRUD operations in MYSQL DB
+
+We need to deploy this application using docker compose.
+
+-----------------------------------------------------------------------------------
+
+
+Step-1 : Develop boot application
+
+Step-2 : Create docker image for boot application
+
+Step-3 : create docker-compose with app container and mysql db container information
+
+Step-4 : Run compose yml and check containers execution

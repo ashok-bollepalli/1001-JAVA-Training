@@ -1,0 +1,337 @@
+
+=========================
+1) What is Webservice ?
+=========================
+
+=> Webservices are used to develop distributed applications.
+
+=> If one application is communicating with another application then we will call it as distributed application.
+
+			Passport <----------> AADHAR App
+
+			MakeMyTrip <--------> IRCTC App
+
+			GPay <-------------> Banking App
+
+
+=> Every Distributed application should maintain intereoperability.
+
+=> Intereoperability means irrespective of the platform and language if applications are communicating then we will call them as Intereoperable applications.
+
+		JAVA <--------> .Net App
+
+		.Net app <---------> Python
+
+		Python <---------> JAVA
+
+		Angular  <-------> JAVA
+
+		React <---------> JAVA
+
+
+====================================================
+Q) Why we should develop Distributed application?
+====================================================
+
+-> Distributed applications are used for Business to Business Communication ( B 2 B )
+
+-> We can resue the functionality of one project in another project.
+
+Ex-1:
+
+-> IRCTC project contains business logic to book train tickets.
+
+-> MakeMyTrip application will communicate with IRCTC to book train tickets.
+
+Note: In this scenario, MakeMyTrip application is re-using IRCTC application logic to book train tickets.
+
+Ex-2 :
+
+-> In olden days we used to develop presentation logic + business logic in single application.
+
+-> Now a days we are developing frontend and backend in seperate applications.
+
+
+		frontend app <---------------> Backend app
+
+
+=> Distributed applications can be developed in 2 ways
+
+		1) SOAP Webservices (outdated)
+
+		2) RESTFul Services (Trending)
+
+
+====================
+What is REST API ?
+=====================
+
+=> REST API means pure backend application which contains only business logic (NO User Interface).
+
+=> Using REST API we can provide business services to other applications.
+
+
+!!!  Distributed App = rest api / restful service / restful webservice / microservice   !!!!
+
+
+======================
+REST API Architecture
+=======================
+
+1) Provider
+
+2) Consumer
+
+=> Provider means the application which is providing business services to other applications.
+
+=> Consumer means the application which is accessing business services from other applications.
+
+
+======
+JSON
+======
+
+=> JSON stands for Java Script Object Notation.
+
+=> JSON represents data in key-value format.
+
+Ex: 
+
+{
+	"id" : 101,
+	"name" : "Ashok",
+	"phone" : 8686868
+}
+
+
+=> JSON is very light weight.
+
+=> JSON is platform independent & language independent.
+
+=> JSON is used to transfer data over a network.
+
+=> Distributed applications will use JSON data for request & response.
+
+=========================================
+Working with JSON in Java Applications
+==========================================
+
+=> Java Applications can use JSON data
+
+=> To work with JSON data in Java app, we have third party libraries
+
+		1) JACKSON
+
+		2) GSON
+
+=> By using above libraries we can convert JSON data to Java Object and vice versa.		
+
+=> The process of converting java obj to json is called as Serialization.
+
+=> The process of converting json data to java obj is called as de-serialization.
+
+----------------------------------------------------------
+<dependency>
+	<groupId>com.fasterxml.jackson.core</groupId>
+	<artifactId>jackson-databind</artifactId>
+	<version>2.17.0</version>
+</dependency>
+----------------------------------------------------------
+@Data
+public class Customer {
+
+    private Integer id;
+    private String name;
+    private Long phno;
+}
+-----------------------------------------------------------
+public class App {
+
+	public static void main(String[] args) throws Exception {
+
+		App a = new App();
+
+		a.convertJavaToJson();
+
+		// a.convertJsonToJava();
+
+	}
+
+	public void convertJavaToJson() throws Exception {
+
+		Customer c1 = new Customer();
+		c1.setId(101);
+		c1.setName("Ashok");
+		c1.setPhno(7979799l);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// Serialization
+		mapper.writeValue(System.out, c1);
+
+		File f = new File("customer.json");
+		mapper.writeValue(f, c1);
+
+		System.out.println("JSON created...");
+
+	}
+
+	public void convertJsonToJava() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		// De-Serialization
+		Customer customer = mapper.readValue(new File("customer.json"), Customer.class);
+		System.out.println(customer);
+	}
+}
+---------------------------------------------------------------------------------------------
+
+
+===========
+GSON API
+===========
+
+### Git Hub Rep : https://github.com/ashokitschool/GSON-JSON-APP.git
+
+-----------------------------------------------
+<dependency>
+	<groupId>com.google.code.gson</groupId>
+	<artifactId>gson</artifactId>
+	<version>2.3.1</version>
+</dependency>
+---------------------------------------------
+
+Gson gson  = new Gson ( );
+
+gson.toJson(Object obj);
+
+gson.fromJson(File file)
+
+
+
+=================
+What is HTTP
+=================
+
+=> HTTP stands for Hyper Text Transfer Protocol.
+
+=> HTTP acts as mediator between Client & Server.
+
+=> HTTP is stateless protocol (can't remember converstation happend between client & server)
+
+=> To develop REST APIs we need to know below concepts of HTTP
+
+		1) HTTP Request structure
+
+		2) HTTP Response structure
+
+		3) HTTP Methods
+
+		4) HTTP Status Codes
+
+========================
+HTTP Request Structure
+========================        
+
+=> It contains below parts
+
+        1) Request Line ( HTTP Method + Server URL )
+
+        2) Request Headers (Metadata) ==> (KEY - VALUE format)
+
+        3) Request Body (Payload ---> text  / xml / json)		
+
+
+=============================
+HTTP Response Structure
+=============================
+
+=> It contains below parts
+
+        1) Response Line (Status Code + Status MSG)
+
+        2) Response Headers  (Metadata - K & V)
+
+        3) Response Body (Payload - text / xml / json)        
+
+
+
+==============
+HTTP Methods
+==============
+
+GET ---> It is used to get the data (no request body)
+
+POST ---> Send data (create record)
+
+PUT ---> Update record (complete update)
+
+PATCH ---> Partial Update
+
+DELETE ---> Delete Record          
+
+
+===================
+HTTP Status Codes
+===================
+
+2xx  (200 - 299) : Success
+
+4xx  (400 - 499) : Client Error
+
+5xx  (500 - 599) : Server Error
+
+
+=======================================
+Developing REST APIs using Spring Boot
+=======================================
+
+=> We will use 'spring-boot-starter-web' dependency in pom.xml
+
+=> As part of REST API development we need to learn both
+
+        1) Provider Development
+
+        2) Consumer Development
+
+
+=> For provider development we will use below annotations
+
+		-- @RestController
+
+		-- @GetMapping
+		-- @PostMapping
+		-- @PutMapping
+		-- @PatchMapping
+		-- @DeleteMapping
+
+		-- @RequestParam
+		-- @PathVariable
+
+		-- @RequestBody        
+
+
+=> For Consumer development we have below 3 options
+
+        -- RestTemplate (Synchronus communication) (web-starter)
+
+        -- WebClient (Synchronus & Asynchronus communication) (spring 5.x, webflux)
+        
+        -- FeignClient (spring cloud)  		
+
+
+Note : We will use POSTMAN to test provider functionality.        
+
+Note: We will use Swagger to generate provider documentation.
+        
+
+
+@RestControllerAdvice ----> Class level 
+
+@ExceptionHandler -----> Method level        
+
+
+@RequestParam("/emps") ---- more than one result
+
+
+@PathVariable("/emps/{id}/abc") --- only one result

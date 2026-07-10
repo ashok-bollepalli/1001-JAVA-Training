@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  web:
+    image: nginx
+    container_name: my-nginx
+    ports:
+      - "8080:80"
+
+  db:
+    image: mysql
+    container_name: my-mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "ashokitdb"
+    ports:
+      - "4406:3306"
