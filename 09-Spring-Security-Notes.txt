@@ -1,0 +1,190 @@
+
+
+=================
+Spring Security
+=================
+
+-> Security is very important for every web application.
+
+-> To protect our application & application data from un-authorized users we need to implement security logic.
+
+-> Spring Security is one of the module of spring framework.
+
+-> Using Spring Security module we can implement
+
+		1) Authentication
+
+		2) Authorization
+
+
+-> Authentication means verifying who can access our application.
+
+-> Authorization means verifying which user can access which functionality.	
+
+
+==============================
+Working with Spring Security
+==============================		
+
+-> To secure our spring boot application we need to add below starter in "pom.xml" file
+
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+
+Note-1: When we add this dependency in pom.xml file then by default our application will be secured with "http basic authentication".
+
+Note-2: It will generate random password to access our application. 
+
+-> We need to use below credentials to access our application
+
+				Username : user
+
+				Password : <copy the pwd from console>
+
+
+-> To access secured REST API from postman, we need to set Auth values in POSTMAN and send the request.
+
+				Auth : Basic Auth
+			    Username : user
+				Password : <copy-from-console>
+
+
+=====================================
+How to secure specific URL Patterns
+=====================================
+
+-> When we add 'security-starter' in pom.xml then it will apply security filter for all the HTTP methods of our application.
+
+-> But in reality we need to secure only few methods not all methods in our application.
+
+			/login-page : secuirty not required (anyone can access)
+
+			/transfer : secuirty required
+
+			/balance : security required
+
+			/about-us : security not required
+
+			/contact-us : security not required
+
+
+-> In order to achieve above requirement we need to Customize Security Configuration in our project like below...
+
+Note: We need to customize our security configuration by using "SecurityFilterChain" obj	
+
+
+---------------------------------------------------------------------------
+
+@Configuration
+@EnableWebSecurity
+public class MySecurityConfig {
+	
+	@Bean
+	public SecurityFilterChain securityConfig(HttpSecurity http) {
+		
+		http.authorizeHttpRequests( (req) -> req
+				.requestMatchers("/welcome", "/contact")
+				.permitAll()
+				.anyRequest()
+				.authenticated()
+		).httpBasic(Customizer.withDefaults())
+		.formLogin(Customizer.withDefaults());
+		
+		return http.build();
+	}
+}
+
+=========================================================
+User Registration and User Login Using Spring Security
+=========================================================
+
+=> To implement this requirement we need to use below Spring Security Components
+
+
+1) BCryptPasswordEncoder
+
+	-- Used to encrypt passwords before storing them in the database.
+	-- It performs one-way password hashing, so the original password cannot be decoded.
+
+2) UserDetailsService (Interface)
+
+	--  Used to load the user record from the database based on the username or email entered during login.
+
+	-- It contains one method i.e loadUserByUsername(String username)
+
+3) UserDetails Object
+
+	-- UserDetails represents the authenticated user inside Spring Security.
+	-- It contains
+
+			-- username or email
+			-- password
+			-- Roles or authorities
+			-- Account status
+
+4) AuthenticationProvider
+
+	-- performs the actual authentication by using UserDetailsService & pwdEncoder
+
+	-- userDetailsService to load the user
+
+	-- PasswordEncoder to verify the password
+
+5) AuthenticationManager
+
+	-- Receives the login credentials and delegates authentication to an AuthenticationProvider
+
+	-- After successful authentication, it contains the authenticated user and roles.
+
+6) SecurityFilterChain
+
+	-- Defines application security rules
+
+	-- It controls
+
+			-- Public URLs
+			-- Secured URls
+			-- CSRF Configuration
+			-- Session Management
+			-- Security Filter
+			-- Role Based Authorization
+
+--------------------------------------------------------------------------------
+
+
+------------------------------------
+Email : ashok@gmail.com
+
+pwd : ashok@123 -------> sdfjos94r79wslfl
+
+Phno : 686868
+-------------------------------
+
+Email : ashok@gmail.com
+
+pwd : ashok@123
+
+-----------------------------
+
+UnameAndPwdToken token = new UsernameAndPwdToken(email, pwd);
+
+Authentication authentication = authManager.authenticate(token);
+
+// Auth-Manager will delegate our auth request to Auth-Provider
+
+// AuthProvider will load user record from DB using given email
+
+// Auth Provider will encrypt user given pwd at login page
+// Auth Provider will compare DB record Pwd and user Given pwd
+
+
+db-record-encrypted-pwd & original-pwd
+
+//Option-1 : encrypt original pwd and compare with db-record-encrypted-pwd
+
+//Option-2 : decrypt db record pwd and compare with original pwd
+
+----------------------------------------------------------------------------
